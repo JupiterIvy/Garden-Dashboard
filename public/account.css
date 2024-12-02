@@ -1,0 +1,68 @@
+/* Main Container */
+ .update-account h2{
+    margin-bottom: 20px;
+ }
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .error {
+    color: red;
+    font-size: 1em;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Styling */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  form label {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  form input {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  form input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  form p {
+    font-size: 1.1em;
+    color: #555;
+    margin-top: 10px;
+  }
+  
+  form button {
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }
+  
+  form button:focus {
+    outline: none;
+  }
+  

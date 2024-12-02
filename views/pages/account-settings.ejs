@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <div class="header-content">
+      <div class="user-info">
+        <span class="user-greeting">Olá, <%= user.username %>!</span> <!-- Exibe o nome do usuário -->
+      </div>
+      <div class="logout">
+        <a href="/logout">Logout</a> <!-- Link de logout -->
+      </div>
+      <title><%=dashboardTitle%></title>
+    </div>
+    
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./account.css" />
+  </head>
+  <body>
+    <div class="container">
+      <aside>
+        <div class="top">
+          <div class="logo">
+            <img src="images/logo.png" alt="" />
+            <a href="/"><h2><%= name %></h2></a>
+          </div>
+          <div class="close" id="close-btn">
+            <span class="material-symbols-sharp"> close </span>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="/dashboard">
+            <span class="material-symbols-sharp"> dashboard </span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="/actuators">
+            <span class="material-symbols-sharp"> sensors </span>
+            <h3>Actuators</h3>
+          </a>
+          <a href="/account" class="active">
+            <span class="material-symbols-sharp"> person </span>
+            <h3>Account</h3>
+          </a>
+        </div>
+      </aside>
+      <main class="update-account">
+        <h1><%= dashboardTitle %></h1>
+
+        <% if (error) { %>
+          <p class="error"><%= error %></p>
+        <% } %>
+        <h2>Account Settings</h2>
+
+        <form action="/update-account" method="POST">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" value="<%= user.username %>" required>
+
+          <label for="newPassword">New Password:</label>
+          <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password">
+
+          <label for="confirmNewPassword">Confirm New Password:</label>
+          <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Confirm new password">
+
+          <p><strong>Email:</strong> <%= user.email %></p> <!-- Exibindo o email atual -->
+
+          <button type="submit">Update Account</button>
+        </form>
+      </main>
+
+      <div class="right">
+        <div class="top">
+          <button id="menu-btn">
+            <span class="material-symbols-sharp"> menu </span>
+          </button>
+          <div class="theme-toggler">
+            <span class="material-symbols-sharp active"> light_mode </span>
+            <span class="material-symbols-sharp"> dark_mode </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./index.js"></script>
+    <script type="module" src="./mqttService.js"></script>
+  </body>
+</html>
