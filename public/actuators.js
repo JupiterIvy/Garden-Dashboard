@@ -1,17 +1,9 @@
 import { MQTTService } from "./mqttService"; // Certifique-se de ter a classe MQTTService correta
 
-// Identifique os elementos de controle dos atuadores
-const relay1OnButton = document.getElementById('relay1-on');
-const relay1OffButton = document.getElementById('relay1-off');
-const relay2OnButton = document.getElementById('relay2-on');
-const relay2OffButton = document.getElementById('relay2-off');
-const relay3OnButton = document.getElementById('relay3-on');
-const relay3OffButton = document.getElementById('relay3-off');
-
-// Defina o tópico para publicar mensagens de controle
-const controlTopic1 = 'sihs3/actuators/relay1';
-const controlTopic2 = 'sihs3/actuators/relay2';
-const controlTopic3 = 'sihs3/actuators/relay3';
+// Defina os tópicos para publicar mensagens de controle
+const controlTopic1 = 'sihs3/atuador/umidadeSolo';
+const controlTopic2 = 'sihs3/atuador/umidade';
+const controlTopic3 = 'sihs3/atuador/temperatura';
 
 // Função para conectar ao broker MQTT e publicar mensagens
 const mqttClient = new MQTTService('ws://broker.hivemq.com:8000/mqtt', {
@@ -28,18 +20,26 @@ const mqttClient = new MQTTService('ws://broker.hivemq.com:8000/mqtt', {
 // Conecte-se ao MQTT broker
 mqttClient.connect();
 
-// Função para publicar mensagem ao clicar em um botão de ON
+// Função para publicar mensagem ao clicar no toggle
 function controlRelay(topic, state) {
   const message = state ? 'ON' : 'OFF';
   mqttClient.publish(topic, message);
 }
 
-// Eventos dos botões de controle
-relay1OnButton.addEventListener('click', () => controlRelay(controlTopic1, true));
-relay1OffButton.addEventListener('click', () => controlRelay(controlTopic1, false));
+// Lógica para capturar os eventos de mudança nos toggles
+document.addEventListener("DOMContentLoaded", () => {
+  const actuators = [
+    { id: "relay1-toggle", topic: controlTopic1 },
+    { id: "relay2-toggle", topic: controlTopic2 },
+    { id: "relay3-toggle", topic: controlTopic3 },
+  ];
 
-relay2OnButton.addEventListener('click', () => controlRelay(controlTopic2, true));
-relay2OffButton.addEventListener('click', () => controlRelay(controlTopic2, false));
-
-relay3OnButton.addEventListener('click', () => controlRelay(controlTopic3, true));
-relay3OffButton.addEventListener('click', () => controlRelay(controlTopic3, false));
+  actuators.forEach((actuator) => {
+    const toggle = document.getElementById(actuator.id);
+    toggle.addEventListener("change", (event) => {
+      const state = event.target.checked ? 'ON' : 'OFF';
+      console.log(`${actuator.id} is turned ${state}`);
+      controlRelay(actuator.topic, event.target.checked); // Publica a mensagem MQTT
+    });
+  });
+});

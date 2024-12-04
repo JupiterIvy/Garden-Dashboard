@@ -11,17 +11,12 @@
       <div class="logout">
         <a href="/logout">Logout</a> <!-- Link de logout -->
       </div>
-      <title><%=dashboardTitle%></title>
+      <title><%= dashboardTitle %></title>
     </div>
-    
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp" rel="stylesheet" />
     <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
     <link rel="stylesheet" href="./style.css" />
-    
   </head>
   <body>
     <div class="container">
@@ -29,7 +24,7 @@
         <div class="top">
           <div class="logo">
             <img src="images/logo.png" alt="" />
-            <a href="/"><h2><%=name%></h2></a>
+            <a href="/"><h2><%= name %></h2></a>
           </div>
           <div class="close" id="close-btn">
             <span class="material-symbols-sharp"> close </span>
@@ -51,70 +46,103 @@
         </div>
       </aside>
       <main>
-        <h1><%=dashboardTitle%></h1>
+        <h1><%= dashboardTitle %></h1>
         <div class="connection-status">
           <h3>Connection Status: <span class="status">Disconnected</span></h3>
         </div>
-        <div class="insights">
-          <div class="temperature">
-            <div class="middle">
-              <div class="left">
-                <h3>Temperature</h3>
-                <h1 id="temperature"></h1>
-              </div>
-              <div class="icon">
-                <span class="material-symbols-sharp"> device_thermostat </span>
-              </div>
-            </div>
-          </div>
-          <!-- End of temperature -->
-          <div class="humidity">
-            <div class="middle">
-              <div class="left">
-                <h3>Humidity</h3>
-                <h1 id="humidity"></h1>
-              </div>
-              <div class="icon">
-                <span class="material-symbols-sharp">
-                  humidity_percentage
-                </span>
-              </div>
-            </div>
-          </div>
-          <!-- End of humidity -->
-          <div class="soil">
-            <div class="middle">
-              <div class="left">
-                <h3>Soil</h3>
-                <h1 id="soil"></h1>
-              </div>
-              <div class="icon">
-                <span class="material-symbols-sharp"> potted_plant </span>
-              </div>
-            </div>
-          </div>
-          <!-- End of soil -->
-          <div class="luminosity">
-            <div class="middle">
-              <div class="left">
-                <h3>Luminosity</h3>
-                <h1 id="luminosity"></h1>
-              </div>
-              <div class="icon">
-                <span class="material-symbols-sharp"> light_mode </span>
-              </div>
-            </div>
-          </div>
-          <!-- End of luminosity -->
+        <div class="tabs">
+          <button id="tab-estufa" class="tab-button active">Estufa</button>
+          <button id="tab-jardim" class="tab-button">Jardim</button>
         </div>
-        <!-- End of Insights -->
-        <div class="histories">
-          <h2>Historical Charts</h2>
-          <div class="history-charts">
-            <div id="temperature-history" class="history-divs"></div>
-            <div id="humidity-history" class="history-divs"></div>
-            <div id="soil-history" class="history-divs"></div>
-            <div id="luminosity-history" class="history-divs"></div>
+        <!-- Conteúdo Estufa -->
+        <div id="content-estufa" class="tab-content">
+          <div class="insights">
+            <div class="temperature">
+              <div class="middle">
+                <div class="left">
+                  <h3>Temperature</h3>
+                  <h1 id="temperature"></h1>
+                </div>
+                <div class="icon">
+                  <span class="material-symbols-sharp"> device_thermostat </span>
+                </div>
+              </div>
+            </div>
+            <div class="humidity">
+              <div class="middle">
+                <div class="left">
+                  <h3>Humidity</h3>
+                  <h1 id="humidity"></h1>
+                </div>
+                <div class="icon">
+                  <span class="material-symbols-sharp"> humidity_percentage </span>
+                </div>
+              </div>
+            </div>
+            <div class="soil">
+              <div class="middle">
+                <div class="left">
+                  <h3>Soil</h3>
+                  <h1 id="soil"></h1>
+                </div>
+                <div class="icon">
+                  <span class="material-symbols-sharp"> potted_plant </span>
+                </div>
+              </div>
+            </div>
+            <div class="luminosity">
+              <div class="middle">
+                <div class="left">
+                  <h3>Luminosity</h3>
+                  <h1 id="luminosity"></h1>
+                </div>
+                <div class="icon">
+                  <span class="material-symbols-sharp"> light_mode </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="histories">
+            <h2>Historical Charts</h2>
+            <div class="history-charts">
+              <div id="temperature-history" class="history-divs"></div>
+              <div id="humidity-history" class="history-divs"></div>
+              <div id="soil-history" class="history-divs"></div>
+              <div id="luminosity-history" class="history-divs"></div>
+            </div>
+          </div>
+        </div>
+        <!-- Conteúdo Jardim -->
+        <div id="content-jardim" class="tab-content hidden">
+          <div class="insights">
+            <div class="soil">
+              <div class="middle">
+                <div class="left">
+                  <h3>Soil Humidity</h3>
+                  <h1 id="jardim-soil-humidity"></h1>
+                </div>
+                <div class="icon">
+                  <span class="material-symbols-sharp"> potted_plant </span>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="actuator">
+              <div class="middle">
+                <div class="left">
+                  <h3>Actuator Status</h3>
+                  <h1 id="jardim-actuator-status"></h1>
+                </div>
+                <div class="icon">
+                  <span class="material-symbols-sharp"> toggle_on </span>
+                </div>
+              </div>
+            </div> -->
+          </div>
+          <div class="histories">
+            <h2>Historical Charts</h2>
+            <div class="history-charts">
+              <div id="soil-garden-history" class="history-divs"></div>
+            </div>
           </div>
         </div>
       </main>
@@ -128,7 +156,6 @@
             <span class="material-symbols-sharp"> dark_mode </span>
           </div>
         </div>
-        <!-- End of top -->
         <div class="gauge-charts">
           <h2>Gauge Charts</h2>
           <div class="item">
@@ -148,5 +175,28 @@
     </div>
     <script type="module" src="./index.js"></script>
     <script type="module" src="./mqttService.js"></script>
+    <script>
+      document.getElementById('tab-estufa').addEventListener('click', () => switchTab('estufa'));
+      document.getElementById('tab-jardim').addEventListener('click', () => switchTab('jardim'));
+
+      function switchTab(tab) {
+        const estufaContent = document.getElementById('content-estufa');
+        const jardimContent = document.getElementById('content-jardim');
+        const estufaButton = document.getElementById('tab-estufa');
+        const jardimButton = document.getElementById('tab-jardim');
+
+        if (tab === 'estufa') {
+          estufaContent.classList.remove('hidden');
+          jardimContent.classList.add('hidden');
+          estufaButton.classList.add('active');
+          jardimButton.classList.remove('active');
+        } else if (tab === 'jardim') {
+          estufaContent.classList.add('hidden');
+          jardimContent.classList.remove('hidden');
+          estufaButton.classList.remove('active');
+          jardimButton.classList.add('active');
+        }
+      }
+    </script>
   </body>
 </html>

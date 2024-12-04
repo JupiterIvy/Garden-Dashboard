@@ -28,12 +28,20 @@ router.post("/register", (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
   
     if (password !== confirmPassword) {
-      return res.render("register", { error: "As senhas não coincidem." });
+      return res.render("pages/register", { 
+        error: "As senhas não coincidem.",
+        name: process.env.NAME,
+        dashboardTitle: process.env.DASHBOARD_TITLE,
+      });
     }
   
     saveUser(username, email, password, (err, userId) => {
       if (err) {
-        return res.render("register", { error: "Erro ao salvar usuário." });
+        return res.render("pages/register", { 
+          error: "Erro ao salvar usuário.",
+          name: process.env.NAME,
+          dashboardTitle: process.env.DASHBOARD_TITLE, 
+        });
       }
       res.redirect("/login");
     });
@@ -55,11 +63,19 @@ router.post("/login", (req, res) => {
   
     validateUserLogin(username, password, (err, user) => {
       if (err) {
-        return res.render("login", { error: "Erro ao fazer login." });
+        return res.render("pages/login", { 
+          error: "Erro ao fazer login.",
+          name: process.env.NAME,
+          dashboardTitle: process.env.DASHBOARD_TITLE,
+        });
       }
   
       if (!user) {
-        return res.render("login", { error: "Usuário ou senha incorretos." });
+        return res.render("pages/login", { 
+          error: "Usuário ou senha incorretos.",
+          name: process.env.NAME,
+          dashboardTitle: process.env.DASHBOARD_TITLE,
+        });
       }
       req.session.user = user;
      
