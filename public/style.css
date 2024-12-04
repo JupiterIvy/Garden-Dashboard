@@ -548,7 +548,6 @@ main .histories h2 {
 
 /* GAUGE CHARTS */
 .right .gauge-charts {
-  width: 100%;
   margin-top: 2rem;
 }
 .right .gauge-charts .item {

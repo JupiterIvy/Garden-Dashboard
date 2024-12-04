@@ -542,9 +542,26 @@ function onMessage(topic, message) {
       umidadeSolo: lastSoil,
       umidadeSoloJardim: lastGardenSoil
     });
+    sendNotifications(lastTemperature)
 
   } catch (error) {
     console.error("Error processing MQTT message:", error);
+  }
+}
+
+function sendNotifications(temperature) {
+  if (temperature > 40) {
+    // Enviar a solicitação de notificação para o back-end
+    fetch('/send-notification', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ temperatura: temperature })
+    })
+    .then(response => response.json())
+    .then(data => console.log('Notificação enviada com sucesso', data))
+    .catch(error => console.error('Erro ao enviar notificação:', error));
   }
 }
 
