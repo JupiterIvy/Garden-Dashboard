@@ -468,9 +468,6 @@ main .insights > div.humidity span {
 main .insights > div.soil span {
   background: var(--color-insight-1);
 }
-main .insights > div.luminosity span {
-  background: var(--color-insight-3);
-}
 
 main .insights > div .middle {
   display: flex;
@@ -551,6 +548,7 @@ main .histories h2 {
 
 /* GAUGE CHARTS */
 .right .gauge-charts {
+  width: 100%;
   margin-top: 2rem;
 }
 .right .gauge-charts .item {

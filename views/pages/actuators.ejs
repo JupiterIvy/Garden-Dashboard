@@ -89,22 +89,24 @@
               </div>
             </div>
             <!-- End of soil -->
-            <div class="luminosity">
+            <div class="soil-garden">
               <div class="middle">
                 <div class="left">
-                  <h3>Luminosity</h3>
-                  <h1 id="luminosity"></h1>
+                  <h3>Soil Garden</h3>
+                  <h1 id="soil-garden"></h1>
                 </div>
                 <div class="icon">
-                  <span class="material-symbols-sharp"> light_mode </span>
+                  <span class="material-symbols-sharp"> potted_plant </span>
                 </div>
               </div>
             </div>
-            <!-- End of luminosity -->
+            <!-- End of soil -->
+            
           </div>
           <!-- End of Insights -->
         <div class="actuators-container">
             <h2>Control Actuators</h2>
+            <h1>GreenHouse</h1>
             <div class="actuator-group">
               <!-- Actuator 1 (Relay 1) -->
               <div class="actuator" id="actuator-1">
@@ -133,6 +135,16 @@
                 </label>
               </div>
             </div>
+            <h1>Garden</h1>
+            <div class="actuator-group">
+              <!-- Actuator 4 (Relay 4) -->
+              <div class="actuator" id="actuator-1">
+                <h3>Relay 4 (Water Pump)</h3>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="relay4-toggle">
+                  <span class="slider"></span>
+                </label>
+              </div>
           </div>
         
       </main>
@@ -150,26 +162,6 @@
         <!-- End of top -->
       </div>
     </div>
-    <script type="module" src="./index.js"></script>
     <script type="module" src="./actuators.js"></script>
   </body>
 </html>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-    const actuators = [
-        { id: "relay1-toggle", name: "Water Pump" },
-        { id: "relay2-toggle", name: "Fan" },
-        { id: "relay3-toggle", name: "Heater" },
-    ];
-
-    actuators.forEach((actuator) => {
-        const toggle = document.getElementById(actuator.id);
-        toggle.addEventListener("change", (event) => {
-        const state = event.target.checked ? "ON" : "OFF";
-        console.log(`${actuator.name} is turned ${state}`);
-        // Aqui você pode enviar o comando para o MQTT ou backend
-        // Exemplo: publishMQTT(actuator.name, state);
-        });
-    });
-    });
-</script>

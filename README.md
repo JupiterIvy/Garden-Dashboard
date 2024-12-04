@@ -16,7 +16,7 @@ Edit the .env and set the MQTT broker URL that you are using
 NAME=SIHS
 DASHBOARD_TITLE=MQTT DASHBOARD
 MQTT_BROKER=ws://broker.hivemq.com:8000/mqtt
-MQTT_TOPICS=sihs3/sensor/umidade,sihs3/sensor/temperatura,sihs3/sensor/umidadeSolo,sihs3/sensor/luminosidade
+MQTT_TOPICS=sihs3/sensor/umidade,sihs3/sensor/temperatura,sihs3/sensor/umidadeSolo
 ```  
 
 Install the dependencies and run the project

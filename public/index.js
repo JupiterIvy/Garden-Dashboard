@@ -53,20 +53,17 @@ themeToggler.addEventListener("click", () => {
 const temperatureHistoryDiv = document.getElementById("temperature-history");
 const humidityHistoryDiv = document.getElementById("humidity-history");
 const soilHistoryDiv = document.getElementById("soil-history");
-const luminosityHistoryDiv = document.getElementById("luminosity-history");
 const soilGardenHistoryDiv = document.getElementById("soil-garden-history");
 
 const temperatureGaugeDiv = document.getElementById("temperature-gauge");
 const humidityGaugeDiv = document.getElementById("humidity-gauge");
 const soilGaugeDiv = document.getElementById("soil-gauge");
-const luminosityGaugeDiv = document.getElementById("luminosity-gauge");
 const soilGardenGaugeDiv = document.getElementById("soil-garden-gauge");
 
 const historyCharts = [
   temperatureHistoryDiv,
   humidityHistoryDiv,
   soilHistoryDiv,
-  luminosityHistoryDiv,
   soilGardenGaugeDiv
 ];
 
@@ -74,7 +71,6 @@ const gaugeCharts = [
   temperatureGaugeDiv,
   humidityGaugeDiv,
   soilGaugeDiv,
-  luminosityGaugeDiv,
   soilGardenHistoryDiv
 ];
 
@@ -97,13 +93,6 @@ var soilTrace = {
   x: [],
   y: [],
   name: "Soil",
-  mode: "lines+markers",
-  type: "line",
-};
-var luminosityTrace = {
-  x: [],
-  y: [],
-  name: "Luminosity",
   mode: "lines+markers",
   type: "line",
 };
@@ -190,30 +179,6 @@ var soilLayout = {
     linecolor: chartAxisColor,
   },
 };
-var luminosityLayout = {
-  autosize: true,
-  title: {
-    text: "Luminosity",
-  },
-  font: {
-    size: 12,
-    color: chartFontColor,
-    family: "poppins, san-serif",
-  },
-  colorway: ["#05AD86"],
-  margin: { t: 40, b: 40, l: 30, r: 30, pad: 0 },
-  plot_bgcolor: chartBGColor,
-  paper_bgcolor: chartBGColor,
-  xaxis: {
-    color: chartAxisColor,
-    linecolor: chartAxisColor,
-    gridwidth: "2",
-  },
-  yaxis: {
-    color: chartAxisColor,
-    linecolor: chartAxisColor,
-  },
-};
 var soilGardenLayout = {
   autosize: true,
   title: {
@@ -251,7 +216,6 @@ window.addEventListener("load", (event) => {
   );
   Plotly.newPlot(humidityHistoryDiv, [humidityTrace], humidityLayout, config);
   Plotly.newPlot(soilHistoryDiv, [soilTrace], soilLayout, config);
-  Plotly.newPlot(luminosityHistoryDiv, [luminosityTrace], luminosityLayout, config);
   Plotly.newPlot(soilGardenHistoryDiv, [soilGardenTrace], soilGardenLayout, config);
 
   // Get MQTT Connection
@@ -331,36 +295,6 @@ var soilData = [
   },
 ];
 
-var luminosityData = [
-  {
-    domain: { x: [0, 1], y: [0, 1] },
-    value: 0,
-    title: { text: "Luminosity" },
-    type: "indicator",
-    mode: "gauge+number+delta",
-    delta: { reference: 3000 }, // Exemplo de referência para a comparação
-    gauge: {
-      axis: { 
-        range: [null, 100000],  // O valor máximo pode ser até 100.000 lux, que é um dia ensolarado muito forte
-        tickwidth: 1,
-        tickcolor: "black"
-      },
-      steps: [
-        { range: [0, 50], color: "rgb(100, 100, 100)" }, // Nível muito baixo de luminosidade (como uma noite sem luz)
-        { range: [50, 500], color: "rgb(150, 150, 150)" }, // Luz fraca (exemplo: ambientes internos com pouca luz)
-        { range: [500, 5000], color: "rgb(200, 200, 200)" }, // Luz ambiente (exemplo: escritório)
-        { range: [5000, 30000], color: "rgb(230, 230, 230)" }, // Luz de dia normal (exemplo: ambientes externos ou luz artificial intensa)
-        { range: [30000, 100000], color: "rgb(255, 255, 255)" }, // Luz solar intensa (dia ensolarado)
-      ],
-      threshold: {
-        line: { color: "red", width: 4 },
-        thickness: 0.75,
-        value: 10000,  // Definir um valor de limiar (por exemplo, para indicar luminosidade intensa)
-      },
-    },
-  },
-];
-
 var soilGardenData = [
   {
     domain: { x: [0, 1], y: [0, 1] },
@@ -389,7 +323,6 @@ var layout = { width: 300, height: 250, margin: { t: 0, b: 0, l: 0, r: 0 } };
 Plotly.newPlot(temperatureGaugeDiv, temperatureData, layout);
 Plotly.newPlot(humidityGaugeDiv, humidityData, layout);
 Plotly.newPlot(soilGaugeDiv, soilData, layout);
-Plotly.newPlot(luminosityGaugeDiv, luminosityData, layout);
 Plotly.newPlot(soilGardenGaugeDiv, soilGardenData, layout);
 
 // Will hold the arrays we receive from our BME280 sensor
@@ -402,9 +335,6 @@ let newHumidityYArray = [];
 // Soil
 let newSoilXArray = [];
 let newSoilYArray = [];
-// Luminosity
-let newLuminosityXArray = [];
-let newLuminosityYArray = [];
 
 let newSoilGardenXArray = [];
 let newSoilGardenYArray = [];
@@ -423,16 +353,13 @@ function updateSensorReadings(jsonResponse) {
   let soil = jsonResponse.umidadeSolo
     ? Number(jsonResponse.umidadeSolo).toFixed(2)
     : 0;
-  let luminosity = jsonResponse.luminosidade
-    ? Number(jsonResponse.luminosidade).toFixed(2)
-    : 0;
   let soilGarden = jsonResponse.umidadeSoloJardim
-  ? Number(jsonResponse.luminosidade).toFixed(2)
+  ? Number(jsonResponse.umidadeSoloJardim).toFixed(2)
   : 0;
 
-  updateBoxes(temperature, humidity, soil, luminosity, soilGarden);
+  updateBoxes(temperature, humidity, soil, soilGarden);
 
-  updateGauge(temperature, humidity, soil, luminosity, soilGarden);
+  updateGauge(temperature, humidity, soil, soilGarden);
 
   // Update Temperature Line Chart
   updateCharts(
@@ -456,37 +383,28 @@ function updateSensorReadings(jsonResponse) {
     soil
   );
 
-  // Update Luminosity Line Chart
-  updateCharts(
-    luminosityHistoryDiv,
-    newLuminosityXArray,
-    newLuminosityYArray,
-    luminosity
-  );
 
   updateCharts(
     soilGardenHistoryDiv,
-    newsoilGardenXArray,
-    newsoilGardenYArray,
+    newSoilGardenXArray,
+    newSoilGardenYArray,
     soilGarden
   );
 }
 
-function updateBoxes(temperature, humidity, soil, luminosity, soilGarden) {
+function updateBoxes(temperature, humidity, soil, soilGarden) {
   let temperatureDiv = document.getElementById("temperature");
   let humidityDiv = document.getElementById("humidity");
   let soilDiv = document.getElementById("soil");
-  let luminosityDiv = document.getElementById("luminosity");
   let soilGardenDiv = document.getElementById("soil-garden");
 
   temperatureDiv.innerHTML = temperature + " C";
   humidityDiv.innerHTML = humidity + " %";
   soilDiv.innerHTML = soil + " %";
-  luminosityDiv.innerHTML = luminosity + " lx";
   soilGardenDiv.innerHTML = soilGarden + " %";
 }
 
-function updateGauge(temperature, humidity, soil, luminosity, soilGarden) {
+function updateGauge(temperature, humidity, soil, soilGarden) {
   var temperature_update = {
     value: temperature,
   };
@@ -496,16 +414,12 @@ function updateGauge(temperature, humidity, soil, luminosity, soilGarden) {
   var soil_update = {
     value: soil,
   };
-  var luminosity_update = {
-    value: luminosity,
-  };
   var soil_garden_update = {
     value: soilGarden,
   };
   Plotly.update(temperatureGaugeDiv, temperature_update);
   Plotly.update(humidityGaugeDiv, humidity_update);
   Plotly.update(soilGaugeDiv, soil_update);
-  Plotly.update(luminosityGaugeDiv, luminosity_update);
   Plotly.update(soilGardenGaugeDiv, soil_garden_update);
 }
 
@@ -587,38 +501,6 @@ function handleDeviceChange(e) {
     historyCharts.forEach((chart) => Plotly.relayout(chart, updateHistory));
   }
 }
-
-const manualHumidityInput = document.querySelector("#manual-humidity");
-const manualTemperatureInput = document.querySelector("#manual-temperature");
-const manualSoilHumidityInput = document.querySelector("#manual-soil-humidity");
-const manualGardenSoilHumidityInput = document.querySelector("#manual-garden-soil-humidity");
-
-function sendManualControlData() {
-  const manualHumidity = manualHumidityInput.value;
-  const manualTemperature = manualTemperatureInput.value;
-  const manualSoilHumidity = manualSoilHumidityInput.value;
-  const manualGardenSoilHumidity = manualGardenSoilHumidityInput.value;
-
-  // Envia para o tópico de umidade
-  mqttService.publish("sihs/atuador/umidade", JSON.stringify(manualHumidity));
-
-  // Envia para o tópico de temperatura
-  mqttService.publish("sihs/atuador/temperatura", JSON.stringify(manualTemperature));
-
-  // Envia para o tópico de umidade do solo
-  mqttService.publish("sihs/atuador/umidadeSolo", JSON.stringify(manualSoilHumidity));
-
-  // Envia para o tópico de umidade do solo do jardim
-  mqttService.publish("sihs/jardim/atuador/umidadeSolo", JSON.stringify(manualGardenSoilHumidity));
-
-  console.log("Dados manuais enviados:", {
-    umidade: manualHumidity,
-    temperatura: manualTemperature,
-    umidadeSolo: manualSoilHumidity,
-    umidadeSoloJardim: manualGardenSoilHumidity,
-  });
-}
-
 /*
   MQTT Message Handling Code
 */
@@ -631,7 +513,6 @@ function onConnect(message) {
 let lastTemperature = null;
 let lastHumidity = null;
 let lastSoil = null;
-let lastLuminosity = null;
 let lastGardenSoil = null;
 
 function onMessage(topic, message) {
@@ -645,23 +526,20 @@ function onMessage(topic, message) {
 
     // Verifica o tópico e adiciona os dados ao objeto `sensorData`
     if (topic === "sihs3/sensor/umidade") {
-      lastHumidity = Number(messageResponse).toFixed(2);
+      lastHumidity = Number(messageResponse.valor).toFixed(2);
     } else if (topic === "sihs3/sensor/temperatura") {
-      lastTemperature = Number(messageResponse).toFixed(2);
+      lastTemperature = Number(messageResponse.valor).toFixed(2);
     } else if (topic === "sihs3/sensor/umidadeSolo") {
-      lastSoil = Number(messageResponse).toFixed(2);
-    } else if (topic === "sihs3/sensor/luminosidade") {
-      lastLuminosity = Number(messageResponse).toFixed(2);
+      lastSoil = Number(messageResponse.valor).toFixed(2);
     } else if (topic === "sihs3/jardim/sensor/umidadeSolo") {
-      lastGardenSoil = Number(messageResponse).toFixed(2);
+      lastGardenSoil = Number(messageResponse.valor).toFixed(2);
     }
-    console.log("aaaaaa", messageResponse)
+    console.log("AAA", messageResponse)
     // Agora, com os dados organizados no objeto, chamamos a função updateSensorReadings
     updateSensorReadings({
       temperatura: lastTemperature,
       umidade: lastHumidity,
       umidadeSolo: lastSoil,
-      luminosidade: lastLuminosity,
       umidadeSoloJardim: lastGardenSoil
     });
 
