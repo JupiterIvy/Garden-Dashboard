@@ -493,8 +493,8 @@ function handleDeviceChange(e) {
     historyCharts.forEach((chart) => Plotly.relayout(chart, updateHistory));
   } else {
     var updateHistory = {
-      width: 550,
-      height: 260,
+      width: 323,
+      height: 250,
       "xaxis.autorange": true,
       "yaxis.autorange": true,
     };
